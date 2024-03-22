@@ -25,6 +25,12 @@ const User = mongoose.model('User', userSchema);
 app.use(express.json());
 
 // Rutas
+
+app.get('/', async (req, res) => {
+    res.send('Hello World!')
+});
+
+
 app.get('/api/models', async (req, res) => {
     try {
         const models = await User.find();
