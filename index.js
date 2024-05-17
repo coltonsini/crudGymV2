@@ -2,8 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-app.use(express.json());
+const path = require('path');
 
 mongoose.connect('mongodb+srv://estjuanjordonez:2gH3DtvCEDQJDyPN@gymdatabase.upwmysx.mongodb.net/', {
     useNewUrlParser: true, 
@@ -12,41 +11,58 @@ mongoose.connect('mongodb+srv://estjuanjordonez:2gH3DtvCEDQJDyPN@gymdatabase.upw
 .then(() => console.log('Conectado a MongoDB'))
 .catch(err => console.error('No se pudo conectar a MongoDB', err));
 
-// Definir el esquema y modelo de usuario
 const userSchema = new mongoose.Schema({
     name: String,
     email: String,
     password: String
 });
 
-const tipSchema = new mongoose.Schema({
+const consejoSchema = new mongoose.Schema({
     titulo: String,
     descripcion: String,
-    imagen: String,
 })
 
 const User = mongoose.model('User', userSchema);
 
-const Consejo = mongoose.model('Consejo', tipSchema);
+const Consejo = mongoose.model('Consejo', consejoSchema);
 
 // Middleware para parsear JSON en las solicitudes POST
 app.use(express.json());
+app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true }));
+
 
 // Rutas
 
-app.get('/', async (req, res) => {
-    res.send('Hello World!')
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Ruta para iniciar sesión
+app.post('/api/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = await User.findOne({ email });
+
+        if (user && user.password === password) {
+            res.send({ message: 'Inicio de sesión exitoso', redirect: '/consejos' });
+        } else {
+            res.status(401).send({ message: 'Correo electrónico o contraseña incorrectos' });
+        }
+    } catch (error) {
+        console.error('Error al iniciar sesión:', error);
+        res.status(500).send('Error interno del servidor');
+    }
 });
 
 
-app.get('/api/models', async (req, res) => {
-    try {
-        const models = await User.find();
-        res.send(models);
-    } catch (error) {
-        console.error('Error al obtener los usuarios:', error);
-        res.status(500).send('Error interno del servidor');
-    }
+// Ruta para la página después del inicio de sesión
+app.get('/consejos', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'consejos.html'));
+});
+
+app.get('/crearConsejo', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'crearConsejos.html'));
 });
 
 app.get('/api/consejos', async (req, res) => {
@@ -54,7 +70,7 @@ app.get('/api/consejos', async (req, res) => {
         const consejos = await Consejo.find();
         res.send(consejos);
     } catch (error) {
-        console.error('Error al obtener los usuarios:', error);
+        console.error('Error al obtener los consejos:', error);
         res.status(500).send('Error interno del servidor');
     }
 });
@@ -77,50 +93,43 @@ app.post('/api/models', async (req, res) => {
 
 app.post('/api/consejos', async (req, res) => {
     try {
-        const { titulo, descripcion, imagen } = req.body;
+        const { titulo, descripcion } = req.body;
         const newConsejo = new Consejo({
             titulo,
             descripcion,
-            imagen
         });
         const savedConsejo = await newConsejo.save();
-        res.status(201).send(savedConsejo);
+        res.redirect('/consejos');
     } catch (error) {
-        console.error('Error al guardar el usuario:', error);
+        console.error('Error al guardar el consejo:', error);
         res.status(500).send('Error interno del servidor');
     }
 });
 
+// Ruta para actualizar un consejo
+app.put('/api/consejos/:id', async (req, res) => {
+    try {
+        const { titulo, descripcion } = req.body;
+        const updatedConsejo = await Consejo.findByIdAndUpdate(req.params.id, { titulo, descripcion }, { new: true });
+        res.send(updatedConsejo);
+    } catch (error) {
+        console.error('Error al actualizar el consejo:', error);
+        res.status(500).send('Error interno del servidor');
+    }
+});
+
+// Ruta para eliminar un consejo
+app.delete('/api/consejos/:id', async (req, res) => {
+    try {
+        await Consejo.findByIdAndRemove(req.params.id);
+        res.send({ message: 'Consejo eliminado con éxito' });
+    } catch (error) {
+        console.error('Error al eliminar el consejo:', error);
+        res.status(500).send('Error interno del servidor');
+    }
+});
+
+
 app.listen(PORT, () => {
     console.log(`Servidor Node.js corriendo en el puerto ${PORT}`);
 });
-
-// const Consejo1 = new Consejo({
-//     titulo: 'Tip 1',
-//     descripcion: 'Lorem ipsum dolor sit amet consectetur adipiscing elit arcu nulla accumsan et, nostra mollis venenatis dis tempor pellentesque primis ante vestibulum ultrices dui, consequat commodo magnis condimentum pharetra habitant lectus facilisis nec auctor. Class turpis ante magnis scelerisque risus sagittis, posuere aliquam praesent auctor convallis pellentesque fusce, quisque viverra eget ac vivamus. Magna sed ultrices consequat per facilisi aenean mauris eu turpis, ridiculus interdum cursus duis vivamus condimentum ullamcorper lacus venenatis nam, velit fusce blandit platea lacinia volutpat in hac.',
-//     imagen: '123456'
-// });
-
-// Consejo1.save()
-// .then(() => console.log('Usuario guardado'))
-// .catch(err => console.error('Error al guardar el usuario', err));
-
-// const Consejo2 = new Consejo({
-//     titulo: 'Tip 2',
-//     descripcion: 'Lorem ipsum dolor sit amet consectetur adipiscing elit arcu nulla accumsan et, nostra mollis venenatis dis tempor pellentesque primis ante vestibulum ultrices dui, consequat commodo magnis condimentum pharetra habitant lectus facilisis nec auctor. Class turpis ante magnis scelerisque risus sagittis, posuere aliquam praesent auctor convallis pellentesque fusce, quisque viverra eget ac vivamus. Magna sed ultrices consequat per facilisi aenean mauris eu turpis, ridiculus interdum cursus duis vivamus condimentum ullamcorper lacus venenatis nam, velit fusce blandit platea lacinia volutpat in hac.',
-//     imagen: '123456'
-// });
-
-// Consejo2.save()
-// .then(() => console.log('Usuario guardado'))
-// .catch(err => console.error('Error al guardar el usuario', err));
-
-// const Consejo3 = new Consejo({
-//     titulo: 'Tip 3',
-//     descripcion: 'Lorem ipsum dolor sit amet consectetur adipiscing elit arcu nulla accumsan et, nostra mollis venenatis dis tempor pellentesque primis ante vestibulum ultrices dui, consequat commodo magnis condimentum pharetra habitant lectus facilisis nec auctor. Class turpis ante magnis scelerisque risus sagittis, posuere aliquam praesent auctor convallis pellentesque fusce, quisque viverra eget ac vivamus. Magna sed ultrices consequat per facilisi aenean mauris eu turpis, ridiculus interdum cursus duis vivamus condimentum ullamcorper lacus venenatis nam, velit fusce blandit platea lacinia volutpat in hac.',
-//     imagen: '123456'
-// });
-
-// Consejo3.save()
-// .then(() => console.log('Usuario guardado'))
-// .catch(err => console.error('Error al guardar el usuario', err));

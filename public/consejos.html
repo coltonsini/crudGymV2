@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./styles/style.css">
+</head>
+<body>
+    <section class="seccionConsejos">
+        <div class="controladorTamaño">
+            <div class="contenidoConsejos">
+                <h1>
+                    Consejos Gym
+                </h1>
+                <div class="contenedorConsejos">
+                </div>
+                
+            </div>
+        </div>
+    </section>
+    <script>
+        window.onload = function() {
+            fetch('/api/consejos')
+                .then(response => response.json())
+                .then(consejos => {
+                    const contenedorConsejos = document.querySelector('.contenedorConsejos');
+                    consejos.forEach(consejo => {
+                        const consejoElement = document.createElement('article');
+                        consejoElement.className = 'controladorConsejos';
+        
+                        const informacionConsejos = document.createElement('div');
+                        informacionConsejos.className = 'informacionConsejos';
+        
+                        const titulo = document.createElement('h2');
+                        titulo.textContent = consejo.titulo;
+        
+                        const descripcion = document.createElement('p');
+                        descripcion.textContent = consejo.descripcion;
+        
+                        informacionConsejos.appendChild(titulo);
+                        informacionConsejos.appendChild(descripcion);
+        
+                        const botonesConsejos = document.createElement('div');
+                        botonesConsejos.className = 'botonesConsejos';
+        
+                        const actualizar = document.createElement('a');
+                        actualizar.href = '';
+                        actualizar.textContent = 'Actualizar';
+                        actualizar.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            const nuevoTitulo = prompt('Ingresa el nuevo título', titulo.textContent);
+                            const nuevaDescripcion = prompt('Ingresa la nueva descripción', descripcion.textContent);
+                            if (nuevoTitulo && nuevaDescripcion) {
+                                fetch('/api/consejos/' + consejo._id, {
+                                    method: 'PUT',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({ titulo: nuevoTitulo, descripcion: nuevaDescripcion }),
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    titulo.textContent = data.titulo;
+                                    descripcion.textContent = data.descripcion;
+                                    alert('Consejo actualizado con éxito');
+                                })
+                                .catch(error => console.error('Error:', error));
+                            }
+                        });
+        
+                        const eliminar = document.createElement('a');
+                        eliminar.href = '';
+                        eliminar.textContent = 'Eliminar';
+                        eliminar.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            if (confirm('¿Estás seguro de que quieres eliminar este consejo?')) {
+                                fetch('/api/consejos/' + consejo._id, {
+                                    method: 'DELETE',
+                                })
+                                .then(() => {
+                                    contenedorConsejos.removeChild(consejoElement);
+                                    alert('Consejo eliminado con éxito');
+                                })
+                                .catch(error => console.error('Error:', error));
+                            }
+                        });
+        
+                        botonesConsejos.appendChild(actualizar);
+                        botonesConsejos.appendChild(eliminar);
+        
+                        consejoElement.appendChild(informacionConsejos);
+                        consejoElement.appendChild(botonesConsejos);
+        
+                        contenedorConsejos.appendChild(consejoElement);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        };
+        
+    </script>
+</body>
+</html>

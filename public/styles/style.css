@@ -1,0 +1,335 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root{
+    --primer-color: #132365;
+    --segundo-color: #E8C635;
+    --tercer-color: #4054A2;
+    --cuarto-color: #6C82D0;
+    --quinto-color: #A3B5EF;
+    --sexto-color: #CFDAF7;
+    --blanco: #F9F6EE;
+    --negro: #000000;
+    --negativo: #961932;
+    --positivo: #1C8C15;
+    font-family: "Raleway", sans-serif;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+  
+* {
+    margin: 0;
+    padding: 0;
+    outline: 0;
+}
+  
+html, body {
+    height: 100%;
+}
+  
+body {
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+  
+img, picture, video, canvas, svg {
+    display: block;
+    max-width: 100%;
+}
+  
+input, button, textarea, select {
+    font: inherit;
+}
+  
+p, h1, h2, h3, h4, h5, h6 {
+    overflow-wrap: break-word;
+}
+  
+#root, #__next {
+    isolation: isolate;
+}
+
+.signin_section{
+    background-color: var(--primer-color);
+    height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.contenedorFormulario {
+	display: flex;
+	flex-direction: column;
+	gap: 32px;
+	width: 90%;
+	max-width: 600px;
+	border: none;
+	border-radius: 00px;
+	padding: 60px 40px;
+	background-color: var(--tercer-color);
+	filter: drop-shadow(0px 2px 2px rgb(90, 90, 90));
+}
+
+.contenedorFormulario header {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.contenedorFormulario header > h1 {
+	font: 700 30px/38px 'Inter', sans-serif;
+    color: var(--sexto-color);
+}
+
+.contenedorFormulario header > p {
+	font: 400 16px/22px 'Raleway', sans-serif;
+    color: var(--sexto-color);
+}
+
+.contenedorForm-inputs {
+	display: flex;
+	flex-direction: column;
+	gap: 26px;
+}
+
+.contenedorInput {
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	gap: 8px;
+	border: 2px solid var(--quinto-color);
+    color: var(--sexto-color);
+}
+
+.contenedorInput label {
+	position: absolute;
+	left: 20px;
+	top: 22px;
+	pointer-events: none;
+	font-size: 16px;
+	transition: all .3s ease;
+}
+
+.contenedorInput label:has(+ input:focus),
+.contenedorInput label:has(+ input:valid) {
+	color: var(--blanco);
+	transform: translateX(0px) translateY(-18px);
+	font-size: 12px;
+}
+
+.verificarInput label:has(+ input:not(:placeholder-shown)) {
+	color: var(--blanco);
+	transform: translateX(0px) translateY(-18px);
+	font-size: 12px;
+}
+
+.contenedorInput label:has(+ textarea:focus),
+.contenedorInput label:has(+ textarea:valid) {
+    color: var(--blanco);
+    transform: translateX(0px) translateY(-18px);
+    font-size: 12px;
+}
+
+.verificarInput label:has(+ textarea:not(:placeholder-shown)) {
+    color: var(--blanco);
+    transform: translateX(0px) translateY(-18px);
+    font-size: 12px;
+}
+
+.contenedorInput input[type="password"],
+input[type="text"]{
+	width: 100%;
+	background: none;
+	padding: 22px 20px;
+	font-size: 16px;
+	text-overflow: ellipsis;
+	border-radius: 8px;
+	color: var(--blanco);
+	transition: all .3s ease;
+	border: none;
+}
+
+.contenedorInput textarea{
+	width: 100%;
+    background: none;
+    padding: 22px 20px;
+    font-size: 16px;
+    text-overflow: ellipsis;
+    border-radius: 8px;
+    color: var(--blanco);
+    transition: all .3s ease;
+    border: none;
+    resize: none;
+    overflow: auto;
+    min-height: 180px;
+}
+
+.contenedorInput input[type="password"]:focus,
+input[type="text"]:focus {
+
+}
+
+.contenedorForm-inputs > input[type="submit"] {
+	width: 100%;
+	border: none;
+	padding: 18px 20px;
+	font-weight: 700;
+	background-color: var(--segundo-color);
+	cursor: pointer;
+	transition: all .3s ease;
+	color: var(--primer-color);
+}
+
+.contenedorForm-inputs > input[type="submit"]:hover {
+	background-color: #211A1E;
+	color: white;
+}
+
+
+/* consejos */
+
+.seccionConsejos{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--primer-color);
+    min-height: 100dvh;
+    width: 100%;
+    padding: 2rem 5%;
+}
+
+.controladorTamaño{
+    display: flex;
+    width: 100%;
+    max-width: 1440px;
+    background-color: var(--blanco);
+    height: 100%;
+    padding: 20px 36px;
+}
+
+.contenidoConsejos{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+
+.contenidoConsejos > h1{
+    font-size: 36px;
+    line-height: 44px;
+    font-weight: 700;
+    color: var(--tercer-color);
+}
+
+.contenedorConsejos{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 16px;
+}
+
+.controladorConsejos{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background-color: var(--sexto-color);
+}
+
+.informacionConsejos{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    height: 100%;
+}
+
+.informacionConsejos > h2{
+    font-size: 22px;
+    line-height: 28px;
+    font-weight: 700;
+    color: var(--tercer-color);
+}
+
+.informacionConsejos > p{
+    font-size: 16px;
+    line-height: 22px;
+    font-weight: 400;
+    color: var(--tercer-color);
+}
+
+.botonesConsejos{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px;
+    background-color: var(--cuarto-color);
+}
+
+.botonesConsejos > a:nth-of-type(1){
+    background-color: var(--positivo);
+    color: white;
+    text-decoration: none;
+    width: fit-content;
+    padding: 8px 16px;
+}
+
+.botonesConsejos > a:nth-of-type(2){
+    background-color: var(--negativo);
+    color: white;
+    text-decoration: none;
+    width: fit-content;
+    padding: 8px 16px;
+}
+
+/* Estilos crear consejo */
+
+.crearConsejoSection{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background-color: var(--tercer-color);
+    height: 100dvh;
+}
+
+.formularioConsejoContenedor{
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    width: 90%;
+	max-width: 600px;
+	border: none;
+	border-radius: 00px;
+	padding: 60px 40px;
+	background-color: var(--primer-color);
+	filter: drop-shadow(0px 2px 2px rgb(10, 53, 87));
+}
+
+.formularioConsejos{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.formularioConsejoContenedor > header > h1{
+    font: 700 30px/38px 'Inter', sans-serif;
+    color: var(--sexto-color);
+}
+
+.formularioConsejos > input[type="submit"] {
+	width: 100%;
+	border: none;
+	padding: 18px 20px;
+	font-weight: 700;
+	background-color: var(--segundo-color);
+	cursor: pointer;
+	transition: all .3s ease;
+	color: var(--primer-color);
+}
+
+.formularioConsejos > input[type="submit"]:hover {
+	background-color: var(--sexto-color);
+}

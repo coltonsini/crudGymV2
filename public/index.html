@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./styles/style.css">
+</head>
+<body>
+    <section class="signin_section">
+        <article class="contenedorFormulario">
+            <header>
+                <h1>
+                    Inicio de sesión Gym App
+                </h1>
+                <p>
+                    Escribe la informacion para iniciar sesión
+                </p>
+            </header>
+    
+            <form action="/api/login" method="post" class="contenedorForm-inputs">
+                <div class="contenedorInput verificarInput">
+                    <label for="userID">
+                        Ingresa tu usuario
+                    </label>
+                    <input type="text" name="email" id="userID" required placeholder=" ">
+                </div>
+    
+                <div class="contenedorInput">
+                    <label for="contraseña">
+                        Ingresa tu contraseña
+                    </label>     
+                    <input type="password" name="password" id="contraseña" required> 
+                </div>
+                
+                <input type="submit" value="Iniciar Sesión">
+            </form>
+        </article>
+    </section>
+    <script>
+        // Manejar el envío del formulario
+        document.querySelector('.contenedorFormulario form').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevenir el envío del formulario por defecto
+
+            const formData = new FormData(this);
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Redirigir a la página especificada en la respuesta del servidor
+                    window.location.href = data.redirect;
+                } else {
+                    // Mostrar mensaje de error
+                    alert(data.message);
+                }
+            } catch (error) {
+                console.error('Error al iniciar sesión:', error);
+                // Mostrar mensaje de error genérico
+                alert('Error interno del servidor');
+            }
+        });
+            
+    </script>
+</body>
+</html>
